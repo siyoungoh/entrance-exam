@@ -81,8 +81,33 @@
         </style>
         <script>
             $(document).ready(function () {
+                showAirQuality();
                 showAttractions();
             });
+
+            function showAirQuality() {
+                $('#air-quality-good').empty();
+                $('#air-quality-moderate').empty();
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://spartacodingclub.shop/sparta_api/seoulair',
+                    data: {},
+                    success: function (response) {
+                        let airPollutionInfo = response['RealtimeCityAir']['row'];
+                        for (let i = 0; i < airPollutionInfo.length; i++) {
+                            let airQuality = airPollutionInfo[i]['IDEX_NM'];
+                            let district = airPollutionInfo[i]['MSRSTE_NM'];
+
+                            if (airQuality === '좋음') {
+                                $('#air-quality-good').append(`${district} `);
+                            } else if (airQuality === '보통') {
+                                $('#air-quality-moderate').append(`${district} `);
+                            }
+                        }
+                    }
+                })
+            }
 
             function saveAttraction() {
                 let attraction = $('#attraction').val();
