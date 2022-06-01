@@ -21,4 +21,5 @@
 ## 기타 사용법
 - 프로젝트 파일 다운로드 받는 방법 : 위 답안 링크로 이동 후, 페이지 우측 상단 초록색 'Code' 버튼 클릭 후, Download ZIP 클릭
 - 변경 사항 보는 방법 : 변경된 파일명 / 추가된 코드: 초록색(+)  / 삭제된 코드(-) : 빨간색
+- 답안 코드 release 버전으로 확인하기 : https://github.com/siyoungoh/entrance-exam/releases
 
