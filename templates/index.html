@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!--bootstrap 5.02-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+              crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+                crossorigin="anonymous"></script>
+        <!--jquery-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!--font-Noto Serif KR Regular 400-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
+
+        <title>자전거 여행</title>
+
+        <style>
+            html, body {
+                font-family: "Noto Serif KR", serif;
+            }
+
+            .header {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                width: 100%;
+                height: 300px;
+
+                color: white;
+            }
+
+            .banner {
+                background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://static.vecteezy.com/system/resources/previews/004/701/229/non_2x/asian-lover-women-and-men-travel-nature-travel-relax-ride-a-bike-wilderness-in-the-wild-standing-on-a-rocky-cliff-thailand-photo.jpg");
+                background-position: center 30%;
+                background-size: cover;
+            }
+
+            .figure-paragraph {
+                display: inline-block;
+                margin: 5px;
+                width: 500px;
+            }
+
+            .post-box {
+                margin: 20px auto 20px auto;
+                padding: 20px;
+
+                width: 95%;
+                max-width: 500px;
+
+                box-shadow: 0px 0px 3px 0px black;
+            }
+
+            .post-box > button {
+                margin-top: 15px;
+            }
+
+            textarea#description {
+                height: 100px;
+            }
+
+            .infos {
+                margin: auto;
+                width: 95%;
+                max-width: 500px;
+            }
+
+            .infos > .card {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+        </style>
+        <script>
+            $(document).ready(function () {
+                showAttractions();
+            });
+
+            function saveAttraction() {
+                let attraction = $('#attraction').val();
+                let description = $('#description').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/attraction',
+                    data: {'attraction': attraction, 'description': description},
+                    success: function (response) {
+                        if (response['status'] === 'saved') {
+                            alert('저장 완료!');
+                        }
+                        window.location.reload();
+                    }
+                });
+            }
+
+            function showAttractions() {
+                $('#attraction-list').empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '/attractions',
+                    data: {},
+                    success: function (response) {
+                        let attractions = response['attractions'];
+                        for (let i = 0; i < attractions.length; i++) {
+                            let attraction = attractions[i]['attraction'];
+                            let description = attractions[i]['description'];
+
+                            let tempHtml = `<div class="card">
+                                            <div class="card-body">
+                                                <blockquote class="blockquote mb-0">
+                                                    <p>${description}</p>
+                                                    <div class="blockquote-footer">${attraction}</div>
+                                                </blockquote>
+                                                <button onclick="" type="button" class="btn btn-dark">읽기</button>
+                                            </div>
+                                        </div>`;
+                            $('#attraction-list').append(tempHtml);
+                        }
+                    }
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <div id="container">
+            <div class="header banner">
+                <h1>자전거 여행</h1>
+                <div class="figure-paragraph">
+                    <p>서울시 공기 상태 (좋음): <span id="air-quality-good">강남구</span></p>
+                    <p>서울시 공기 상태 (보통): <span id="air-quality-moderate">중구, 종로구, 용산구</span></p>
+                </div>
+            </div>
+            <div id="content">
+                <div class="post-box">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="attraction" placeholder="추천하고 싶은 여행지">
+                        <label for="attraction">여행 명소</label>
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control" id="description" placeholder="설명을 남겨주세요"></textarea>
+                        <label for="description">설명</label>
+                    </div>
+                    <button onclick="saveAttraction()" type="button" class="btn btn-dark">정보 남기기</button>
+                </div>
+                <div class="infos" id="attraction-list">
+                    <div class="card">
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <p>노을이 멋져요!</p>
+                                <div class="blockquote-footer">노들섬</div>
+                                <button>읽기</button>
+                            </blockquote>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <p>강변이 아름답습니다!</p>
+                                <div class="blockquote-footer">성수 뚝섬</div>
+                                <p>읽음</p>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
