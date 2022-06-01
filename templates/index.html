@@ -135,13 +135,13 @@
                     success: function (response) {
                         let attractions = response['attractions'];
                         for (let i = 0; i < attractions.length; i++) {
-                            let attractionId = attractions[i]['attractionId'];
+                            let attractionId = attractions[i]['_id'];
                             let attraction = attractions[i]['attraction'];
                             let description = attractions[i]['description'];
                             let read = attractions[i]['read'];
 
                             let tempHtml = ``;
-                            if (read === true) {
+                            if (read == 'True') {
                                 tempHtml = `<div class="card">
                                             <div class="card-body">
                                                 <blockquote class="blockquote mb-0">

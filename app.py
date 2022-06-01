@@ -12,7 +12,7 @@ db = client.bicycleTouringDB
 
 @app.route("/")
 def home():
-    return render_template("index3.html")
+    return render_template("index2.html")
 
 
 @app.route("/attraction", methods=["POST"])
@@ -31,16 +31,10 @@ def save_attraction():
 
 @app.route("/attractions", methods=["GET"])
 def get_attractions():
-    pipelines = [{'$project': {'attractionId': {"$toString": "$_id"}, 'attraction': "$attraction",
-                               "description": "$description", "read": "$read", '_id': False}},
-                 {"$sort": {"read": pymongo.ASCENDING}}]
-    attractions = list(db.attractions.aggregate(pipelines))
-    # 참고 문서
-    # https://pymongo.readthedocs.io/en/stable/examples/aggregation.html
-    # https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/
-    # https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/#definition
-    # https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/#definition
-
+    attractions = list(db.attractions.find({}, {}).sort("read", pymongo.ASCENDING))
+    # 참고 : https://stackoverflow.com/questions/4291236/edit-the-values-in-a-list-of-dictionaries
+    for attraction in attractions:
+        attraction.update((k, str(v)) for k, v in attraction.items())
     return jsonify({"attractions": attractions})
 
 
